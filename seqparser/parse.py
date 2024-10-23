@@ -17,7 +17,7 @@ class Parser:
                     self.breed = breed
                     self.food = food
                     
-        # What attributes are we initializing here in Parser? 
+        # What attributes are we initializing here in Parser? filename is an attribute and self.filename is an instance.
         """
         
         self.filename = filename
@@ -72,12 +72,12 @@ class Parser:
             # this loop will run forever or return an error, depending on your implementations of _get_record
             # but we will leave it up to you to implement the fix! 
 
-            # hint: when reading a file, how do we know when to stop reading? what keyword should we use to stop a loop?
+            # hint: when reading a file, how do we know when to stop reading? what keyword should we use to stop a loop? when a file is read completely and there no more to read, it returns empty string '',break is a method to stop a loop
 
             while True:
                 rec = self.get_record(f_obj)
-                # TODO: stop the loop
-                yield rec
+                break
+            yield rec
 
     def _get_record(self, f_obj: io.TextIOWrapper) -> Union[Tuple[str, str], Tuple[str, str, str]]:
         """
@@ -97,7 +97,28 @@ class FastaParser(Parser):
     def _get_record(self, f_obj: io.TextIOWrapper) -> Tuple[str, str]:
         """
         TODO: returns the next fasta record as a 2-tuple of (header, sequence)
+       return (header,sequence)
+        
+        
+        output: (seq0, 'AGCTAGCTA')
+                (seq1, 'AGCTGATGC')
         """
+        header=None # initialize header before assigning. when header=0, it gives an error. When header=(), an error message appears.
+        sequence="" # empty string to initialize the sequence. when define sequence(), TypeError: can only concatenate tuple (not "str") to tuple
+        data=(header,sequence) # Store header and sequence inside a Tuple
+        
+        # Iterate through each line of DNA sequences.
+        for line in f_obj:
+            if line.startswith(">"): # conditional statement to check if line starts with >. if True
+                if header: # if True,  add header to data 
+                    data=(header,sequence)
+                header=line.strip() # strip() is a method to remove whitespaces
+                 
+            else:
+                sequence+=line.strip() # add the line to sequence while removing whitespaces
+                
+              
+        return (header,sequence)    
 
 
 class FastqParser(Parser):
@@ -107,5 +128,37 @@ class FastqParser(Parser):
     def _get_record(self, f_obj: io.TextIOWrapper) -> Tuple[str, str, str]:
         """
         TODO: returns the next fastq record as a 3-tuple of (header, sequence, quality)
+
+        
         """
 
+        header=None # initialize header before assigning. when header=0, it gives an error. When header=(), an error message.
+        sequence="" # create an empty string to insert sequence into it. when sequence=() gives an error. Tuples are not mutable.
+        quality="" # create an empty string to insert quality into it. when quality=(), an error appears. Tuples are not mutable.
+        data=(header,sequence,quality) # data as a variable assigned to a Tuple with three elements
+        # Iterate through each line of DNA sequences.
+        for line in f_obj:
+            if line.startswith("@"): # conditional statement to check if line starts with @. if True
+                if header: # If condition is True, add header to data 
+                    data=(header,sequence,quality)
+            header=line.strip() # strip() is a method to remove whitespaces
+            if not header: # conditional statement to check if not header is True, check line for sequence. I tried with elif but didn't work
+                sequence+=line.strip() # add the line to sequence while removing whitespaces 
+            else:
+                quality+=line.strip() # add the line to quality while removing whitespaces
+            
+    
+    
+        return (header,sequence,quality)
+    
+            
+        
+
+
+
+
+    
+
+
+
+            

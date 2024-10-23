@@ -2,7 +2,8 @@
 
 from seqparser import (
         FastaParser,
-        FastqParser)
+        FastqParser,
+        )
 
 
 def test_freebie_parser_1():
@@ -28,8 +29,18 @@ def test_FastaParser():
     your FastaParser class and assert that it properly
     reads in the example Fasta File.
     """
-    pass
+ 
 
+    aparser = FastaParser('test1.fa')
+    for line in aparser:
+        assert type(line) == tuple
+        assert line[0][:4] == '>seq'
+        assert type(line[1][:4])== str
+        
+        
+        
+    
+    
 
 def test_FastqParser():
     """
@@ -38,4 +49,12 @@ def test_FastqParser():
     your FastqParser class and assert that it properly
     reads in the example Fastq File.
     """
-    pass
+    aparser = FastqParser('test1.fq')
+    for line in aparser:
+        assert type(line) == tuple
+        assert line[0][:5] != ">"
+        assert type(line[1][:4]) == str
+        assert type(line[2][:4]) == str
+        
+       
+
