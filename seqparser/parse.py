@@ -76,8 +76,9 @@ class Parser:
 
             while True:
                 rec = self.get_record(f_obj)
-                break
-            yield rec
+                if rec==None:
+                    break
+                yield rec
 
     def _get_record(self, f_obj: io.TextIOWrapper) -> Union[Tuple[str, str], Tuple[str, str, str]]:
         """
@@ -103,22 +104,22 @@ class FastaParser(Parser):
         output: (seq0, 'AGCTAGCTA')
                 (seq1, 'AGCTGATGC')
         """
-        header=None # initialize header before assigning. when header=0, it gives an error. When header=(), an error message appears.
+        header="" # initialize header before assigning. when header=0, it gives an error. When header=(), an error message appears.
         sequence="" # empty string to initialize the sequence. when define sequence(), TypeError: can only concatenate tuple (not "str") to tuple
         data=(header,sequence) # Store header and sequence inside a Tuple
         
         # Iterate through each line of DNA sequences.
         for line in f_obj:
             if line.startswith(">"): # conditional statement to check if line starts with >. if True
-                if header: # if True,  add header to data 
-                    data=(header,sequence)
+                #if header: # if True,  add header to data 
+                    #data=(header,sequence)
                 header=line.strip() # strip() is a method to remove whitespaces
-                 
+                
             else:
                 sequence+=line.strip() # add the line to sequence while removing whitespaces
                 
-              
-        return (header,sequence)    
+            if header and sequence:
+                return (header,sequence)    
 
 
 class FastqParser(Parser):
@@ -132,24 +133,26 @@ class FastqParser(Parser):
         
         """
 
-        header=None # initialize header before assigning. when header=0, it gives an error. When header=(), an error message.
+        header="" # initialize header before assigning. when header=0, it gives an error. When header=(), an error message.
         sequence="" # create an empty string to insert sequence into it. when sequence=() gives an error. Tuples are not mutable.
         quality="" # create an empty string to insert quality into it. when quality=(), an error appears. Tuples are not mutable.
         data=(header,sequence,quality) # data as a variable assigned to a Tuple with three elements
         # Iterate through each line of DNA sequences.
         for line in f_obj:
             if line.startswith("@"): # conditional statement to check if line starts with @. if True
-                if header: # If condition is True, add header to data 
-                    data=(header,sequence,quality)
-            header=line.strip() # strip() is a method to remove whitespaces
-            if not header: # conditional statement to check if not header is True, check line for sequence. I tried with elif but didn't work
+                #if header: # If condition is True, add header to data 
+                    #data=(header,sequence,quality)
+                header=line.strip() # strip() is a method to remove whitespaces
+            elif line.startswith(("A","T","C","G")): # conditional statement to check if not header is True, check line for sequence. I tried with elif but didn't work
                 sequence+=line.strip() # add the line to sequence while removing whitespaces 
+            elif line.startswith("+ "):
+                quality
             else:
                 quality+=line.strip() # add the line to quality while removing whitespaces
             
     
     
-        return (header,sequence,quality)
+            return (header,sequence,quality)
     
             
         

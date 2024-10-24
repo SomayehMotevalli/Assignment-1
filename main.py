@@ -15,23 +15,34 @@ def main():
     # For each record of FastaParser, Transcribe the sequence
     # and print it to console
     parser_obj = FastaParser('data/test.fa')
+    for header,sequence in parser_obj:
+        print(header)
+        print(transcribe(sequence))
+    parser_obj = FastaParser('data/test.fa')
     for record in parser_obj:
         header,sequence=record
-        rna_seq=transcribe(sequence)
-    print(rna_seq)
+        seq=sequence
+        seq=transcribe(seq)
+        reversed_seq=seq[::-1]
+        print(reversed_seq)
+       
+        
+   
+
 
 
         
             
-    aparser = FastqParser('data/test.fa')
+    aparser = FastqParser('data/test.fq')
     # For each record of FastqParser, Transcribe the sequence
     # and print it to console
-    parser_obj = FastqParser('data/test.fa')
+    
+    parser_obj = FastqParser('data/test.fq')
     for record in parser_obj:
         header,sequence,quality=record
         seq=transcribe(sequence)
-        reversed_seq=sequence[::-1]
-    print(reversed_seq)
+        reversed_seq=seq[::-1]
+        print(reversed_seq)
      
      
 
