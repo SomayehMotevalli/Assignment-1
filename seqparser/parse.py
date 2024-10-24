@@ -110,9 +110,7 @@ class FastaParser(Parser):
         
         # Iterate through each line of DNA sequences.
         for line in f_obj:
-            if line.startswith(">"): # conditional statement to check if line starts with >. if True
-                #if header: # if True,  add header to data 
-                    #data=(header,sequence)
+            if line.startswith(">"): # conditional statement to check if line starts with >
                 header=line.strip() # strip() is a method to remove whitespaces
                 
             else:
@@ -133,17 +131,15 @@ class FastqParser(Parser):
         
         """
 
-        header="" # initialize header before assigning. when header=0, it gives an error. When header=(), an error message.
+        header="" # empty string to insert header
         sequence="" # create an empty string to insert sequence into it. when sequence=() gives an error. Tuples are not mutable.
         quality="" # create an empty string to insert quality into it. when quality=(), an error appears. Tuples are not mutable.
-        data=(header,sequence,quality) # data as a variable assigned to a Tuple with three elements
+        data=(header,sequence,quality) # data as a variable assigned to a Tuple with three arguments
         # Iterate through each line of DNA sequences.
         for line in f_obj:
             if line.startswith("@"): # conditional statement to check if line starts with @. if True
-                #if header: # If condition is True, add header to data 
-                    #data=(header,sequence,quality)
                 header=line.strip() # strip() is a method to remove whitespaces
-            elif line.startswith(("A","T","C","G")): # conditional statement to check if not header is True, check line for sequence. I tried with elif but didn't work
+            elif line.startswith(("A","T","C","G")): # conditional statement 
                 sequence+=line.strip() # add the line to sequence while removing whitespaces 
             elif line.startswith("+ "):
                 quality
